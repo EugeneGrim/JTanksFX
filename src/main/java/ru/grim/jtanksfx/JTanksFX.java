@@ -2,6 +2,8 @@ package ru.grim.jtanksfx;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -19,9 +21,9 @@ public class JTanksFX extends Application {
 
   @Override
   public void start(Stage theStage) {
-    theStage.setTitle("Collect the Money Bags!");
+    theStage.setTitle("JTanksFX");
 
-    ArrayList<String> input = new ArrayList<>();
+    Queue<String> input = new LinkedList<>();
     
     GraphicsContext gc = addCanvas(theStage, input).getGraphicsContext2D();
 
@@ -57,19 +59,28 @@ public class JTanksFX extends Application {
     theStage.show();
   }
   
-  private void handleUserInputs(Tank tank, ArrayList<String> input, double elapsedTime) {
-    tank.setVelocity(0, 0);
-    if (input.contains("LEFT")) {
-      tank.addVelocity(-50, 0);
-    }
-    if (input.contains("RIGHT")) {
-      tank.addVelocity(50, 0);
-    }
-    if (input.contains("UP")) {
-      tank.addVelocity(0, -50);
-    }
-    if (input.contains("DOWN")) {
-      tank.addVelocity(0, 50);
+  private void handleUserInputs(Tank tank, Queue<String> input, double elapsedTime) {
+    tank.stop();
+    
+    Iterator<String> inputIterator = input.iterator();
+    while (inputIterator.hasNext()) {
+      String userInput = inputIterator.next();
+      if (userInput.equals("LEFT") && !tank.isVerticalMoving()) {
+        System.out.println("LEFT");
+        tank.moveLeft();
+      }
+      if (userInput.equals("RIGHT") && !tank.isVerticalMoving()) {
+        System.out.println("RIGHT");
+        tank.moveRight();
+      }
+      if (userInput.equals("UP") && !tank.isHorizontalMoving()) {
+        System.out.println("UP");
+        tank.moveUp();
+      }
+      if (userInput.equals("DOWN") && !tank.isHorizontalMoving()) {
+        System.out.println("DOWN");
+        tank.moveDown();
+      }
     }
 
     tank.update(elapsedTime);
@@ -85,7 +96,7 @@ public class JTanksFX extends Application {
     }
   }
 
-  private Canvas addCanvas(Stage stage, ArrayList<String> input) {
+  private Canvas addCanvas(Stage stage, Queue<String> input) {
     Group root = new Group();
     
     Scene theScene = new Scene(root);
@@ -113,14 +124,14 @@ public class JTanksFX extends Application {
     return moneybagList;
   }
 
-  private EventHandler<? super KeyEvent> getEventHandlerForKeyReleased(ArrayList<String> input) {
+  private EventHandler<? super KeyEvent> getEventHandlerForKeyReleased(Queue<String> input) {
     return event -> {
       String code = event.getCode().toString();
       input.remove(code);
     };
   }
 
-  private EventHandler<? super KeyEvent> getEventHandlerForKeyPressed(ArrayList<String> input) {
+  private EventHandler<? super KeyEvent> getEventHandlerForKeyPressed(Queue<String> input) {
     return event -> {
       String code = event.getCode().toString();
       if (!input.contains(code))

@@ -11,18 +11,62 @@ public class Tank implements SceneObject {
   private double velocityY;
   private double width;
   private double height;
+  
+  private boolean verticalMoving;
+  private boolean horizontalMoving;
 
   public Tank(double size) {
     positionX = 0;
     positionY = 0;
     velocityX = 0;
     velocityY = 0;
-    width = size;
-    height = size;
+    width     = size;
+    height    = size;
+    
+    verticalMoving   = false;
+    horizontalMoving = false;
+  }
+  
+  public void moveUp() {
+    addVelocity(0, -50);
+    verticalMoving = true;
+    horizontalMoving = false;
+  }
+  
+  public void moveDown() {
+    addVelocity(0, 50);
+    verticalMoving = true;
+    horizontalMoving = false;
+  }
+  
+  public void moveLeft() {
+    addVelocity(-50, 0);
+    verticalMoving = false;
+    horizontalMoving = true;
+  }
+  
+  public void moveRight() {
+    addVelocity(50, 0);
+    verticalMoving = false;
+    horizontalMoving = true;
+  }
+  
+  public void stop() {
+    setVelocity(0, 0);
+    verticalMoving   = false;
+    horizontalMoving = false;
   }
 
+  public boolean isVerticalMoving() {
+    return verticalMoving;
+  }
+
+  public boolean isHorizontalMoving() {
+    return horizontalMoving;
+  }
+  
   public void setSize(double size) {
-    width = size;
+    width  = size;
     height = size;
   }
 
@@ -31,12 +75,12 @@ public class Tank implements SceneObject {
     positionY = y;
   }
 
-  public void setVelocity(double x, double y) {
+  private void setVelocity(double x, double y) {
     velocityX = x;
     velocityY = y;
   }
 
-  public void addVelocity(double x, double y) {
+  private void addVelocity(double x, double y) {
     velocityX += x;
     velocityY += y;
   }
@@ -47,6 +91,7 @@ public class Tank implements SceneObject {
   }
 
   public void render(GraphicsContext gc) {
+    System.out.println(positionX + ":" + positionY);
     gc.setFill(Color.GREEN);
     gc.setStroke(Color.BLUE);
     gc.setLineWidth(5);
